@@ -32,6 +32,15 @@ export const metadata: Metadata = {
     'planejamento tributário imobiliário',
   ],
   authors: [{ name: EMPRESA.nome }],
+  icons: {
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', type: 'image/png' },
+    ],
+    shortcut: '/icon.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
@@ -40,12 +49,21 @@ export const metadata: Metadata = {
     title: 'Immovi Contabilidade | Contabilidade para o Mercado Imobiliário',
     description:
       'Contabilidade especializada para corretores, imobiliárias, arquitetos, engenheiros, designers e profissionais do mercado imobiliário. Receba uma consultoria gratuita da Immovi.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1270,
+        height: 900,
+        alt: 'Immovi Contabilidade — Especialistas no Ecossistema Imobiliário',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Immovi Contabilidade | Contabilidade para o Mercado Imobiliário',
     description:
       'Contabilidade especializada para profissionais e empresas do mercado imobiliário. Consultoria gratuita.',
+    images: ['/og-image.png'],
   },
 }
 
