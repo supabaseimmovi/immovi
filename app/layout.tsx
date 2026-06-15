@@ -52,8 +52,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/og-image.png',
-        width: 1270,
-        height: 900,
+        width: 3508,
+        height: 2481,
         alt: 'Immovi Contabilidade — Especialistas no Ecossistema Imobiliário',
       },
     ],
