@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { requireApiSession } from '@/lib/crm-session'
+import { requireApiRole } from '@/lib/crm-session'
 import { supabaseAdmin } from '@/lib/supabase/server'
 import { assertSameOrigin, isUuid, readJsonLimited } from '@/lib/security'
 
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const csrf = assertSameOrigin(request)
   if (csrf) return csrf
 
-  const auth = await requireApiSession()
+  const auth = await requireApiRole(['admin', 'atendente'])
   if ('response' in auth) return auth.response
 
   const parsed = await readJsonLimited<{ lead_id?: string; observacao?: string }>(request)

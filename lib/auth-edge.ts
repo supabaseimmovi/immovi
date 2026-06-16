@@ -1,4 +1,10 @@
-import { getSecretString, type SessionPayload, type CrmRole } from './auth-shared'
+import {
+  TOKEN_AUDIENCE,
+  TOKEN_ISSUER,
+  getSecretString,
+  type SessionPayload,
+  type CrmRole,
+} from './auth-shared'
 
 /**
  * Verificação de JWT HS256 usando apenas Web Crypto — compatível com Edge
@@ -58,9 +64,16 @@ export async function verifyTokenEdge(
   const payload = decodeJson(payloadB64)
   if (!payload) return null
 
-  if (typeof payload.exp === 'number' && Date.now() / 1000 > payload.exp) {
+  if (typeof payload.exp !== 'number' || Date.now() / 1000 > payload.exp) {
     return null
   }
+  if (payload.iss !== TOKEN_ISSUER) return null
+  if (payload.aud !== TOKEN_AUDIENCE) return null
+
+  const sub = String(payload.sub ?? '')
+  const email = String(payload.email ?? '')
+  const jti = String(payload.jti ?? '')
+  if (!sub || !email || !jti) return null
 
   const rawRole = payload.role
   const role: CrmRole =
@@ -69,9 +82,10 @@ export async function verifyTokenEdge(
       : 'viewer'
 
   return {
-    sub: String(payload.sub ?? ''),
-    email: String(payload.email ?? ''),
+    sub,
+    email,
     nome: payload.nome ? String(payload.nome) : undefined,
     role,
+    jti,
   }
 }

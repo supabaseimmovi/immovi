@@ -46,6 +46,7 @@ function mascararWhatsapp(valor: string): string {
 const inputClasses =
   'w-full rounded-lg border border-cinzaClaro bg-white px-4 py-3 text-sm text-azulEscuro outline-none transition-colors placeholder:text-azulAcinzentado focus:border-verde focus:ring-2 focus:ring-verde/30'
 const labelClasses = 'mb-1.5 block text-sm font-medium text-azulEscuro'
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 export default function Formulario() {
   const [form, setForm] = useState<FormState>(ESTADO_INICIAL)
@@ -56,8 +57,11 @@ export default function Formulario() {
   const [cfToken, setCfToken] = useState('')
   const turnstileRef = useRef<HTMLDivElement>(null)
   const widgetId = useRef<string | null>(null)
+  const tokenResolver = useRef<((token: string) => void) | null>(null)
 
   useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return
+
     if (!document.getElementById('cf-turnstile-script')) {
       const s = document.createElement('script')
       s.id = 'cf-turnstile-script'
@@ -69,10 +73,22 @@ export default function Formulario() {
       if (window.turnstile && turnstileRef.current && !widgetId.current) {
         clearInterval(iv)
         widgetId.current = window.turnstile.render(turnstileRef.current, {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
-          callback: (t) => setCfToken(t),
-          'expired-callback': () => setCfToken(''),
-          'error-callback': () => setCfToken(''),
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (t) => {
+            setCfToken(t)
+            tokenResolver.current?.(t)
+            tokenResolver.current = null
+          },
+          'expired-callback': () => {
+            setCfToken('')
+            tokenResolver.current?.('')
+            tokenResolver.current = null
+          },
+          'error-callback': () => {
+            setCfToken('')
+            tokenResolver.current?.('')
+            tokenResolver.current = null
+          },
           size: 'invisible',
           theme: 'light',
         })
@@ -105,6 +121,26 @@ export default function Formulario() {
     return Object.keys(novos).length === 0
   }
 
+  async function obterTokenTurnstile(): Promise<string> {
+    if (!TURNSTILE_SITE_KEY) return ''
+    if (cfToken) return cfToken
+    if (!widgetId.current || !window.turnstile) return ''
+
+    return new Promise((resolve) => {
+      const timer = window.setTimeout(() => {
+        tokenResolver.current = null
+        resolve('')
+      }, 5000)
+
+      tokenResolver.current = (token) => {
+        window.clearTimeout(timer)
+        resolve(token)
+      }
+
+      window.turnstile?.execute(widgetId.current!)
+    })
+  }
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
     if (loading || enviado) return
@@ -113,10 +149,11 @@ export default function Formulario() {
 
     setLoading(true)
     try {
+      const token = await obterTokenTurnstile()
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, cf_token: cfToken }),
+        body: JSON.stringify({ ...form, cf_token: token }),
       })
       if (!res.ok) throw new Error('Falha no envio')
       analytics.formSubmitConsultoria({
@@ -128,6 +165,7 @@ export default function Formulario() {
       if (widgetId.current && window.turnstile) {
         window.turnstile.reset(widgetId.current)
         setCfToken('')
+        tokenResolver.current = null
       }
     } catch {
       setErro(FORM.erro)

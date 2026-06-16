@@ -46,7 +46,8 @@ export async function verifyToken(
 
     const sub = typeof payload.sub === 'string' ? payload.sub : ''
     const email = typeof payload.email === 'string' ? payload.email : ''
-    if (!sub || !email) return null
+    const jti = typeof payload.jti === 'string' ? payload.jti : ''
+    if (!sub || !email || !jti) return null
 
     const rawRole = payload.role
     const role: CrmRole =
@@ -59,7 +60,7 @@ export async function verifyToken(
       email,
       nome: typeof payload.nome === 'string' ? payload.nome : undefined,
       role,
-      jti: typeof payload.jti === 'string' ? payload.jti : undefined,
+      jti,
     }
   } catch {
     return null

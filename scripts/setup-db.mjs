@@ -1,58 +1,47 @@
 /**
- * Script de setup do banco — roda uma vez para criar tabelas e usuário admin.
- * Execute com: node scripts/setup-db.mjs
+ * Script opcional para criar um usuário admin inicial.
+ *
+ * Ele carrega variáveis de ambiente do processo ou de .env.local, mas nunca
+ * deve conter chaves/senhas hardcoded. Rode migrations pelo Supabase CLI ou
+ * SQL Editor antes de usar este script.
  */
 import { createClient } from '@supabase/supabase-js'
 import bcrypt from 'bcryptjs'
-import { readFileSync } from 'fs'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { existsSync, readFileSync } from 'fs'
+import { join } from 'path'
 
-const __dir = dirname(fileURLToPath(import.meta.url))
+function loadEnvLocal() {
+  const envPath = join(process.cwd(), '.env.local')
+  if (!existsSync(envPath)) return
 
-const SUPABASE_URL = 'https://ktqokpwzlzacqjpdyrvn.supabase.co'
-const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0cW9rcHd6bHphY3FqcGR5cnZuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTU3NTE3NiwiZXhwIjoyMDk3MTUxMTc2fQ.Q9n0GrBHS3HaE93Vwm_BDOiGxcJEdx8eE3Q1zK17AEU'
+  const lines = readFileSync(envPath, 'utf8').split(/\r?\n/)
+  for (const line of lines) {
+    const match = line.match(/^\s*([^#=]+)=(.*)\s*$/)
+    if (!match) continue
 
-const ADMIN_EMAIL = 'admin@immovicontabilidade.com.br'
-const ADMIN_SENHA = 'immovi@2026'
-const ADMIN_NOME  = 'Administrador Immovi'
-
-const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY)
-
-async function runMigration(file) {
-  const sql = readFileSync(join(__dir, '..', 'supabase', 'migrations', file), 'utf8')
-  console.log(`\n▶ Executando ${file}...`)
-
-  // Divide em statements individuais e executa via REST RPC
-  const statements = sql
-    .split(';')
-    .map(s => s.trim())
-    .filter(s => s.length > 0 && !s.startsWith('--'))
-
-  for (const stmt of statements) {
-    const { error } = await supabase.rpc('exec_sql', { query: stmt + ';' }).catch(() => ({ error: { message: 'rpc não disponível' } }))
-    if (error) {
-      // Fallback: tenta via REST direto
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SERVICE_ROLE_KEY,
-          'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-        },
-        body: JSON.stringify({ query: stmt + ';' }),
-      })
-      if (!res.ok) {
-        const text = await res.text()
-        // Ignora erros de "já existe" (idempotência)
-        if (!text.includes('already exists') && !text.includes('duplicate') && !text.includes('does not exist')) {
-          console.warn(`  ⚠ ${stmt.slice(0, 60)}... → ${text.slice(0, 120)}`)
-        }
-      }
-    }
+    const key = match[1].trim()
+    const value = match[2].trim().replace(/^['"]|['"]$/g, '')
+    if (!process.env[key]) process.env[key] = value
   }
-  console.log(`  ✓ ${file} processado`)
 }
+
+function required(name) {
+  const value = process.env[name]?.trim()
+  if (!value) throw new Error(`Variável obrigatória ausente: ${name}`)
+  return value
+}
+
+loadEnvLocal()
+
+const SUPABASE_URL = required('NEXT_PUBLIC_SUPABASE_URL')
+const SERVICE_ROLE_KEY = required('SUPABASE_SERVICE_ROLE_KEY')
+const ADMIN_EMAIL = required('CRM_ADMIN_EMAIL')
+const ADMIN_SENHA = required('CRM_ADMIN_SENHA')
+const ADMIN_NOME = process.env.CRM_ADMIN_NOME?.trim() || 'Administrador Immovi'
+
+const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+  auth: { autoRefreshToken: false, persistSession: false },
+})
 
 async function createAdminUser() {
   console.log('\n▶ Criando usuário admin...')
@@ -103,15 +92,11 @@ async function testConnection() {
 }
 
 async function main() {
-  console.log('=== Setup do Banco de Dados — Immovi ===')
+  console.log('=== Criação de Admin — Immovi ===')
 
   const ok = await testConnection()
-  if (!ok) {
-    console.log('\n  Tabelas ainda não existem — isso é esperado na primeira execução.')
-  }
+  if (!ok) process.exit(1)
 
-  await runMigration('001_initial.sql')
-  await runMigration('002_security_hardening.sql')
   await createAdminUser()
 
   // Verifica resultado final
@@ -124,14 +109,10 @@ async function main() {
     console.table(users)
   }
 
-  const { data: leads } = await supabase
-    .from('leads_immovi')
-    .select('id', { count: 'exact', head: true })
-
-  console.log(`\n✓ Setup concluído! Tabela leads_immovi pronta.`)
+  console.log(`\n✓ Setup concluído.`)
   console.log(`\nAcesse o CRM em: http://localhost:3000/login`)
   console.log(`E-mail: ${ADMIN_EMAIL}`)
-  console.log(`Senha:  ${ADMIN_SENHA}`)
+  console.log('Senha:  definida via CRM_ADMIN_SENHA; não compartilhe por arquivo versionado.')
 }
 
 main().catch(console.error)

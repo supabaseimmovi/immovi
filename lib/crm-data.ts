@@ -1,6 +1,7 @@
 import 'server-only'
 import { supabaseAdmin, isSupabaseConfigurado } from './supabase/server'
 import { STATUS_LEAD } from './constants'
+import { safeSearch } from './security'
 import type { Lead, LeadHistorico } from './types'
 
 const POR_PAGINA = 20
@@ -79,8 +80,10 @@ export async function getLeadsList(filtro: LeadsFiltro): Promise<LeadsResultado>
     query = query.eq('principal_necessidade', filtro.principal_necessidade)
   if (filtro.origem) query = query.eq('origem', filtro.origem)
   if (filtro.q) {
-    const q = filtro.q.trim()
-    query = query.or(`nome.ilike.%${q}%,whatsapp.ilike.%${q}%,email.ilike.%${q}%`)
+    const q = safeSearch(filtro.q)
+    if (q) {
+      query = query.or(`nome.ilike.%${q}%,whatsapp.ilike.%${q}%,email.ilike.%${q}%`)
+    }
   }
 
   const from = (pagina - 1) * POR_PAGINA

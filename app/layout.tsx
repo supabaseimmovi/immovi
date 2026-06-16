@@ -95,7 +95,10 @@ gtag('config', '${GA_ID}');`}
           </>
         )}
       </head>
-      <body className="font-sans bg-brancoFrio text-azulEscuro antialiased">
+      <body
+        className="font-sans bg-brancoFrio text-azulEscuro antialiased"
+        suppressHydrationWarning
+      >
         {/* Google Tag Manager (noscript) */}
         {GTM_ID && (
           <noscript>

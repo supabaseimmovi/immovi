@@ -1,10 +1,11 @@
 /**
  * Verificação server-side do Cloudflare Turnstile.
- * Retorna true se o token for válido (ou se a chave não estiver configurada — dev local).
+ * Retorna true se o token for válido.
+ * Em desenvolvimento local, a ausência da chave permite testar os formulários.
  */
 export async function verifyTurnstile(token: string | undefined): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY?.trim()
-  if (!secret) return true // chave não configurada: ignora em dev
+  if (!secret) return process.env.NODE_ENV !== 'production'
   if (!token || token.trim() === '') return false
 
   const body = new URLSearchParams({ secret, response: token })
