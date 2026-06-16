@@ -124,9 +124,6 @@ export default function Footer() {
             <Link href="/politica-de-privacidade" className="hover:text-verde">
               Política de privacidade
             </Link>
-            <Link href="/login" className="hover:text-verde">
-              Acesso CRM
-            </Link>
           </div>
         </div>
       </div>
