@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Mail,
   Phone,
+  Clock,
 } from 'lucide-react'
 import type { Lead } from '@/lib/types'
 import { STATUS_LEAD, MENSAGENS_WHATSAPP } from '@/lib/constants'
@@ -22,6 +23,16 @@ import {
   LABEL_EMITE_NOTA,
   LABEL_NECESSIDADE,
 } from '@/lib/labels'
+
+function formatarData(iso: string): string {
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(iso))
+}
 
 function whatsappDoLead(numero: string): string {
   const d = numero.replace(/\D/g, '')
@@ -143,9 +154,15 @@ export default function LeadDetalhe({ lead }: { lead: Lead }) {
 
       {/* Dados */}
       <div className="rounded-xl border border-cinzaClaro bg-white p-5">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-cinzaMedio">
-          Dados da solicitação
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-cinzaMedio">
+            Dados da solicitação
+          </h2>
+          <span className="inline-flex items-center gap-1.5 text-xs text-azulAcinzentado">
+            <Clock size={13} />
+            {formatarData(lead.criado_em)}
+          </span>
+        </div>
         <dl className="mt-3 grid gap-x-6 gap-y-3 sm:grid-cols-2">
           {campos.map((c) => (
             <div key={c.label}>
