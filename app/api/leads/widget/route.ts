@@ -30,6 +30,7 @@ export async function POST(request: Request) {
 
   const turnstileOk = await verifyTurnstile(body.cf_token as string | undefined)
   if (!turnstileOk) {
+    console.warn('[api/leads/widget] Turnstile bloqueou requisição — token ausente ou inválido. IP:', request.headers.get('x-forwarded-for') ?? 'desconhecido')
     return NextResponse.json(
       { ok: false, error: 'Verificação de segurança falhou. Tente novamente.' },
       { status: 403 }
