@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/crm-session'
-import CrmTopbar from '@/components/crm/CrmTopbar'
+import CrmSidebar from '@/components/crm/CrmSidebar'
 
 export const metadata: Metadata = {
   title: 'CRM Immovi',
@@ -18,8 +18,10 @@ export default async function CrmLayout({
 
   return (
     <div className="min-h-screen bg-[#eef2f4]">
-      <CrmTopbar email={session.email} nome={session.nome} />
-      <main className="container py-8">{children}</main>
+      <CrmSidebar email={session.email} nome={session.nome} />
+      <div className="md:pl-64">
+        <main className="px-4 py-8 sm:px-8">{children}</main>
+      </div>
     </div>
   )
 }
