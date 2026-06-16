@@ -9,8 +9,8 @@ export async function GET() {
     NEXT_PUBLIC_SUPABASE_URL: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
     SUPABASE_SERVICE_ROLE_KEY: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
     CRM_JWT_SECRET: Boolean(process.env.CRM_JWT_SECRET),
-    CRM_JWT_SECRET_LENGTH: process.env.CRM_JWT_SECRET?.length ?? 0,
-    NEXT_PUBLIC_SUPABASE_URL_VALUE: process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 30) + '...' || 'não definido',
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),
+    TURNSTILE_SECRET_KEY: Boolean(process.env.TURNSTILE_SECRET_KEY),
     NODE_ENV: process.env.NODE_ENV,
   })
 }
