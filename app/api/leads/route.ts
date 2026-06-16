@@ -7,6 +7,7 @@ import {
   getSafeWebhookUrl,
   postWebhook,
 } from '@/lib/security'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -32,6 +33,14 @@ export async function POST(request: Request) {
   const parsed = await readJsonLimited<Record<string, unknown>>(request)
   if ('response' in parsed) return parsed.response
   const body = parsed.data
+
+  const turnstileOk = await verifyTurnstile(body.cf_token as string | undefined)
+  if (!turnstileOk) {
+    return NextResponse.json(
+      { ok: false, error: 'Verificação de segurança falhou. Recarregue a página e tente novamente.' },
+      { status: 403 }
+    )
+  }
 
   const lead = {
     nome: limpar(body.nome, 120),

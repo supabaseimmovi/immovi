@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { CheckCircle, Loader2, Send, X } from 'lucide-react'
 import WhatsAppIcon from '@/components/icons/WhatsAppIcon'
 import { whatsappLink } from '@/lib/constants'
@@ -24,13 +24,40 @@ export default function WhatsAppButton() {
   const [duvida, setDuvida] = useState('')
   const [erro, setErro] = useState('')
   const [urlFinal, setUrlFinal] = useState('')
+  const [cfToken, setCfToken] = useState('')
   const nomeRef = useRef<HTMLInputElement>(null)
+  const turnstileRef = useRef<HTMLDivElement>(null)
+  const widgetId = useRef<string | null>(null)
 
   useEffect(() => {
     const onScroll = () => setVisivel(window.scrollY > 300)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    if (!document.getElementById('cf-turnstile-script')) {
+      const s = document.createElement('script')
+      s.id = 'cf-turnstile-script'
+      s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+      s.async = true
+      document.head.appendChild(s)
+    }
+    const iv = setInterval(() => {
+      if (window.turnstile && turnstileRef.current && !widgetId.current) {
+        clearInterval(iv)
+        widgetId.current = window.turnstile.render(turnstileRef.current, {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+          callback: (t) => setCfToken(t),
+          'expired-callback': () => setCfToken(''),
+          'error-callback': () => setCfToken(''),
+          size: 'invisible',
+          theme: 'light',
+        })
+      }
+    }, 100)
+    return () => clearInterval(iv)
   }, [])
 
   useEffect(() => {
@@ -86,6 +113,7 @@ export default function WhatsAppButton() {
           nome: nome.trim(),
           whatsapp,
           mensagem: duvida.trim() || undefined,
+          cf_token: cfToken,
         }),
       })
       const json = await res.json()
@@ -99,6 +127,10 @@ export default function WhatsAppButton() {
       const msg = `Olá! Sou ${nome.trim()} e gostaria de falar com um especialista da Immovi Contabilidade.${duvida.trim() ? ` Minha dúvida: ${duvida.trim()}` : ''}`
       setUrlFinal(whatsappLink(msg))
       setEstado('sucesso')
+      if (widgetId.current && window.turnstile) {
+        window.turnstile.reset(widgetId.current)
+        setCfToken('')
+      }
     } catch {
       setErro('Erro de conexão. Tente novamente.')
       setEstado('aberto')
@@ -150,6 +182,7 @@ export default function WhatsAppButton() {
 
             {/* Corpo */}
             <div className="px-5 py-4">
+              <div ref={turnstileRef} className="hidden" />
               {estado === 'sucesso' ? (
                 <div className="py-2 text-center">
                   <CheckCircle size={42} className="mx-auto text-verde" />

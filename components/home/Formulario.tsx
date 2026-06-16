@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useState, useEffect, useRef, type FormEvent } from 'react'
 import { CheckCircle2, Loader2, ShieldCheck, AlertCircle } from 'lucide-react'
 import { FORM } from '@/lib/content'
 import { whatsappLink, MENSAGENS_WHATSAPP } from '@/lib/constants'
@@ -53,6 +53,33 @@ export default function Formulario() {
   const [enviado, setEnviado] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
   const [erros, setErros] = useState<Partial<Record<keyof FormState, string>>>({})
+  const [cfToken, setCfToken] = useState('')
+  const turnstileRef = useRef<HTMLDivElement>(null)
+  const widgetId = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (!document.getElementById('cf-turnstile-script')) {
+      const s = document.createElement('script')
+      s.id = 'cf-turnstile-script'
+      s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+      s.async = true
+      document.head.appendChild(s)
+    }
+    const iv = setInterval(() => {
+      if (window.turnstile && turnstileRef.current && !widgetId.current) {
+        clearInterval(iv)
+        widgetId.current = window.turnstile.render(turnstileRef.current, {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!,
+          callback: (t) => setCfToken(t),
+          'expired-callback': () => setCfToken(''),
+          'error-callback': () => setCfToken(''),
+          size: 'invisible',
+          theme: 'light',
+        })
+      }
+    }, 100)
+    return () => clearInterval(iv)
+  }, [])
 
   const set = (campo: keyof FormState, valor: string) => {
     setForm((f) => ({ ...f, [campo]: valor }))
@@ -89,7 +116,7 @@ export default function Formulario() {
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, cf_token: cfToken }),
       })
       if (!res.ok) throw new Error('Falha no envio')
       analytics.formSubmitConsultoria({
@@ -98,6 +125,10 @@ export default function Formulario() {
       })
       setEnviado(true)
       setForm(ESTADO_INICIAL)
+      if (widgetId.current && window.turnstile) {
+        window.turnstile.reset(widgetId.current)
+        setCfToken('')
+      }
     } catch {
       setErro(FORM.erro)
     } finally {
@@ -364,6 +395,8 @@ export default function Formulario() {
                   placeholder="Conte um pouco mais sobre sua necessidade (opcional)"
                 />
               </div>
+
+              <div ref={turnstileRef} className="hidden" />
 
               {erro && (
                 <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
