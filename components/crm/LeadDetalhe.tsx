@@ -14,7 +14,7 @@ import {
   Clock,
 } from 'lucide-react'
 import type { Lead } from '@/lib/types'
-import { STATUS_LEAD, MENSAGENS_WHATSAPP } from '@/lib/constants'
+import { STATUS_LEAD } from '@/lib/constants'
 import {
   rotulo,
   LABEL_TIPO_ATUACAO,
@@ -31,15 +31,15 @@ function formatarData(iso: string): string {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'America/Sao_Paulo',
   }).format(new Date(iso))
 }
 
-function whatsappDoLead(numero: string): string {
+function whatsappDoLead(numero: string, nome: string): string {
   const d = numero.replace(/\D/g, '')
   const comDDI = d.startsWith('55') ? d : `55${d}`
-  return `https://wa.me/${comDDI}?text=${encodeURIComponent(
-    MENSAGENS_WHATSAPP.consultoria
-  )}`
+  const msg = `Olá, ${nome}! Tudo bem? Aqui é a equipe da Immovi Contabilidade. Recebemos seu interesse em nossos serviços e gostaríamos de conversar sobre como podemos ajudar no seu negócio. Quando teria disponibilidade para uma conversa rápida?`
+  return `https://wa.me/${comDDI}?text=${encodeURIComponent(msg)}`
 }
 
 export default function LeadDetalhe({ lead }: { lead: Lead }) {
@@ -146,7 +146,7 @@ export default function LeadDetalhe({ lead }: { lead: Lead }) {
           )}
         </div>
         <a
-          href={whatsappDoLead(lead.whatsapp)}
+          href={whatsappDoLead(lead.whatsapp, lead.nome)}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-4 inline-flex items-center gap-2 rounded-full bg-verde px-5 py-2.5 text-sm font-semibold text-azulEscuro transition-transform hover:scale-[1.03]"
