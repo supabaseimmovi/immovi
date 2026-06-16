@@ -15,6 +15,7 @@ interface FormState {
   situacao_atual: string
   faturamento_mensal: string
   emite_nota: string
+  quantidade_notas: string
   principal_necessidade: string
   mensagem: string
 }
@@ -28,6 +29,7 @@ const ESTADO_INICIAL: FormState = {
   situacao_atual: '',
   faturamento_mensal: '',
   emite_nota: '',
+  quantidade_notas: '',
   principal_necessidade: '',
   mensagem: '',
 }
@@ -289,7 +291,10 @@ export default function Formulario() {
                   <select
                     id="emite_nota"
                     value={form.emite_nota}
-                    onChange={(e) => set('emite_nota', e.target.value)}
+                    onChange={(e) => {
+                      set('emite_nota', e.target.value)
+                      if (e.target.value !== 'sim') set('quantidade_notas', '')
+                    }}
                     className={inputClasses}
                   >
                     <option value="">Selecione...</option>
@@ -301,6 +306,28 @@ export default function Formulario() {
                   </select>
                 </div>
               </div>
+
+              {form.emite_nota === 'sim' && (
+                <div>
+                  <label htmlFor="quantidade_notas" className={labelClasses}>
+                    Quantas notas fiscais você emite por mês?
+                  </label>
+                  <input
+                    id="quantidade_notas"
+                    type="number"
+                    inputMode="numeric"
+                    min="1"
+                    max="9999"
+                    value={form.quantidade_notas}
+                    onChange={(e) => {
+                      const v = e.target.value.replace(/\D/g, '')
+                      set('quantidade_notas', v)
+                    }}
+                    className={inputClasses}
+                    placeholder="Ex: 10"
+                  />
+                </div>
+              )}
 
               <div>
                 <label htmlFor="principal_necessidade" className={labelClasses}>

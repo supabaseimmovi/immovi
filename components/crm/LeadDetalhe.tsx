@@ -114,6 +114,9 @@ export default function LeadDetalhe({ lead }: { lead: Lead }) {
     { label: 'Situação atual', valor: rotulo(LABEL_SITUACAO_ATUAL, lead.situacao_atual) },
     { label: 'Faturamento mensal', valor: rotulo(LABEL_FATURAMENTO, lead.faturamento_mensal) },
     { label: 'Emite nota', valor: rotulo(LABEL_EMITE_NOTA, lead.emite_nota) },
+    ...(lead.quantidade_notas != null
+      ? [{ label: 'Qtd. notas/mês', valor: String(lead.quantidade_notas) }]
+      : []),
     { label: 'Necessidade', valor: rotulo(LABEL_NECESSIDADE, lead.principal_necessidade) },
     { label: 'Origem', valor: lead.origem },
   ]

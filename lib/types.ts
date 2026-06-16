@@ -8,6 +8,7 @@ export interface Lead {
   situacao_atual: string
   faturamento_mensal: string
   emite_nota: string | null
+  quantidade_notas: number | null
   principal_necessidade: string
   mensagem: string | null
   status: string

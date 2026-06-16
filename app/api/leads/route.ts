@@ -42,6 +42,11 @@ export async function POST(request: Request) {
     situacao_atual: limpar(body.situacao_atual, 60),
     faturamento_mensal: limpar(body.faturamento_mensal, 60),
     emite_nota: limpar(body.emite_nota, 40) || null,
+    quantidade_notas: (() => {
+      if (body.emite_nota !== 'sim') return null
+      const n = parseInt(String(body.quantidade_notas ?? ''), 10)
+      return Number.isFinite(n) && n > 0 && n <= 9999 ? n : null
+    })(),
     principal_necessidade: limpar(body.principal_necessidade, 60),
     mensagem: limpar(body.mensagem, 2000) || null,
   }
