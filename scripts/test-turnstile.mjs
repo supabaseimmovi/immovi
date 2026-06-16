@@ -12,7 +12,7 @@
  * Um lead real (com token válido gerado pelo browser) passaria normalmente.
  */
 
-const BASE_URL = 'https://immovi-sigma.vercel.app'
+const BASE_URL = 'https://immovi.vercel.app'
 
 const COR = {
   verde: '\x1b[32m',
