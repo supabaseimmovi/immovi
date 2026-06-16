@@ -118,7 +118,15 @@ export default function LeadDetalhe({ lead }: { lead: Lead }) {
       ? [{ label: 'Qtd. notas/mês', valor: String(lead.quantidade_notas) }]
       : []),
     { label: 'Necessidade', valor: rotulo(LABEL_NECESSIDADE, lead.principal_necessidade) },
-    { label: 'Origem', valor: lead.origem },
+    {
+      label: 'Origem',
+      valor:
+        lead.origem === 'site_immovi'
+          ? 'Formulário do site'
+          : lead.origem === 'widget_whatsapp'
+          ? 'Caixinha do WhatsApp'
+          : lead.origem,
+    },
   ]
 
   return (

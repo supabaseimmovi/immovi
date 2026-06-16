@@ -112,6 +112,16 @@ export default function FiltrosLead({ valores }: { valores: FiltrosValores }) {
           ))}
         </select>
 
+        <select
+          value={filtros.origem || ''}
+          onChange={(e) => onChangeSelect('origem', e.target.value)}
+          className={selectCls}
+        >
+          <option value="">Toda origem</option>
+          <option value="site_immovi">Formulário do site</option>
+          <option value="widget_whatsapp">Caixinha do WhatsApp</option>
+        </select>
+
         {temFiltro && (
           <button
             type="button"

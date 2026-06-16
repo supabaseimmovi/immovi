@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Phone, Clock, ArrowRight } from 'lucide-react'
+import { Phone, Clock, ArrowRight, FileText, MessageCircle } from 'lucide-react'
 import type { Lead } from '@/lib/types'
 import {
   COR_STATUS,
@@ -7,6 +7,19 @@ import {
   LABEL_TIPO_ATUACAO,
   LABEL_NECESSIDADE,
 } from '@/lib/labels'
+
+const ORIGEM_CONFIG: Record<string, { label: string; icon: React.ReactNode; cls: string }> = {
+  site_immovi: {
+    label: 'Formulário do site',
+    icon: <FileText size={11} />,
+    cls: 'bg-azulAcinzentado/15 text-azulEscuro',
+  },
+  widget_whatsapp: {
+    label: 'Caixinha do WhatsApp',
+    icon: <MessageCircle size={11} />,
+    cls: 'bg-verde/15 text-verde',
+  },
+}
 
 function formatarData(iso: string): string {
   try {
@@ -52,6 +65,14 @@ export default function LeadCard({ lead }: { lead: Lead }) {
           <span className="inline-flex items-center gap-1">
             <Clock size={13} /> {formatarData(lead.criado_em)}
           </span>
+          {ORIGEM_CONFIG[lead.origem] && (
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium ${ORIGEM_CONFIG[lead.origem].cls}`}
+            >
+              {ORIGEM_CONFIG[lead.origem].icon}
+              {ORIGEM_CONFIG[lead.origem].label}
+            </span>
+          )}
         </div>
       </div>
       <ArrowRight
