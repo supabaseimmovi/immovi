@@ -20,7 +20,7 @@ export default function Hero() {
       <div aria-hidden="true" className="absolute inset-0">
         <Image
           src="/media/hero/hero-poster.jpg"
-          alt=""
+          alt="Profissionais do mercado imobiliário com contabilidade digital especializada"
           fill
           className="object-cover"
           priority

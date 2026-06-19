@@ -14,9 +14,9 @@ import CTAFinal from '@/components/home/CTAFinal'
 import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
-  title: 'Immovi Contabilidade | Contabilidade para o Mercado Imobiliário',
+  title: 'Contabilidade para o Mercado Imobiliário',
   description:
-    'Contabilidade especializada para corretores, imobiliárias, arquitetos, engenheiros, designers e profissionais do mercado imobiliário. Receba uma consultoria gratuita da Immovi.',
+    'Contabilidade digital para corretores, imobiliárias, arquitetos, engenheiros e profissionais do mercado imobiliário. Consultoria gratuita da Immovi.',
   alternates: { canonical: '/' },
 }
 
