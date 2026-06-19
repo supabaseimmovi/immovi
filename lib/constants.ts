@@ -9,10 +9,6 @@ export const EMPRESA = {
   email: '',
   enderecos: [
     {
-      cidade: 'Barueri – SP',
-      logradouro: 'Al. Mamoré, 687 – Sala 304, Alphaville',
-    },
-    {
       cidade: 'Sorocaba – SP',
       logradouro: 'Rua Fernando Silva, 190 – Sala 308, Jardim Astro',
     },
