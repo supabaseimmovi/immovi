@@ -42,9 +42,9 @@ export const metadata: Metadata = {
       'Contabilidade especializada para corretores, imobiliárias, arquitetos, engenheiros, designers e profissionais do mercado imobiliário. Receba uma consultoria gratuita da Immovi.',
     images: [
       {
-        url: '/og-image.jpg',
-        secureUrl: '/og-image.jpg',
-        type: 'image/jpeg',
+        url: '/og-image.png',
+        secureUrl: '/og-image.png',
+        type: 'image/png',
         width: 1200,
         height: 630,
         alt: 'Immovi Contabilidade — Especialistas no Ecossistema Imobiliário',
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     title: 'Immovi Contabilidade | Contabilidade para o Mercado Imobiliário',
     description:
       'Contabilidade especializada para profissionais e empresas do mercado imobiliário. Consultoria gratuita.',
-    images: ['/og-image.jpg'],
+    images: ['/og-image.png'],
   },
 }
 
