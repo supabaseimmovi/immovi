@@ -3,7 +3,7 @@ interface TurnstileRenderOptions {
   callback?: (token: string) => void
   'expired-callback'?: () => void
   'error-callback'?: () => void
-  size?: 'normal' | 'compact' | 'invisible'
+  size?: 'normal' | 'compact' | 'flexible'
   theme?: 'light' | 'dark' | 'auto'
   action?: string
 }

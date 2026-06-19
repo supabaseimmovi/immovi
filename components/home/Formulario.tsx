@@ -89,7 +89,7 @@ export default function Formulario() {
             tokenResolver.current?.('')
             tokenResolver.current = null
           },
-          size: 'invisible',
+          size: 'compact',
           theme: 'light',
         })
       }

@@ -68,7 +68,7 @@ export default function WhatsAppButton() {
             tokenResolver.current?.('')
             tokenResolver.current = null
           },
-          size: 'invisible',
+          size: 'compact',
           theme: 'light',
         })
       }
