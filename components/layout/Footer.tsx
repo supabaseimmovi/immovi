@@ -92,7 +92,7 @@ export default function Footer() {
           {/* Endereços */}
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wide text-verde">
-              Endereços
+              Endereço
             </h3>
             <ul className="mt-4 space-y-5">
               {EMPRESA.enderecos.map((end) => (
