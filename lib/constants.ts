@@ -13,7 +13,7 @@ export const EMPRESA = {
   enderecos: [
     {
       cidade: 'Sorocaba – SP',
-      logradouro: 'Rua Fernando Silva, 190 – Sala 308, Jardim Astro',
+      logradouro: 'Rua Fernando Silva, 190 – Sala 804, Jardim Astro',
     },
   ],
   priceRange: 'R$ 257 - R$ 1.497/mês',
