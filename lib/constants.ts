@@ -7,10 +7,16 @@ export const EMPRESA = {
     'https://www.instagram.com/immovicontabilidade',
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || 'INSERIR_NUMERO_AQUI',
   email: '',
-  endereco: {
-    cidade: 'Sorocaba – SP',
-    logradouro: 'Rua Fernando Silva, 190 – Sala 802, Jardim Astro',
-  },
+  enderecos: [
+    {
+      cidade: 'Barueri – SP',
+      logradouro: 'Al. Mamoré, 687 – Sala 304, Alphaville',
+    },
+    {
+      cidade: 'Sorocaba – SP',
+      logradouro: 'Rua Fernando Silva, 190 – Sala 308, Jardim Astro',
+    },
+  ],
   priceRange: 'R$ 257 - R$ 1.497/mês',
 }
 

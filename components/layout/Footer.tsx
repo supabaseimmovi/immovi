@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { MessageCircle, MapPin } from 'lucide-react'
 import InstagramIcon from '@/components/icons/InstagramIcon'
 import { EMPRESA, whatsappLink, MENSAGENS_WHATSAPP } from '@/lib/constants'
-import { NAV_ITEMS, SERVICOS, SEGMENTOS, FOOTER } from '@/lib/content'
+import { NAV_ITEMS, SERVICOS, FOOTER } from '@/lib/content'
 import { analytics } from '@/lib/analytics'
 
 export default function Footer() {
@@ -89,32 +89,23 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Segmentos + Endereço */}
+          {/* Endereços */}
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wide text-verde">
-              Para quem é
+              Endereços
             </h3>
-            <ul className="mt-4 space-y-2.5">
-              {SEGMENTOS.itens.slice(0, 6).map((seg) => (
-                <li key={seg.href}>
-                  <Link
-                    href={seg.href}
-                    className="text-sm text-brancoFrio/75 transition-colors hover:text-verde"
-                  >
-                    {seg.nome}
-                  </Link>
+            <ul className="mt-4 space-y-5">
+              {EMPRESA.enderecos.map((end) => (
+                <li key={end.cidade} className="flex items-start gap-2 text-sm text-brancoFrio/75">
+                  <MapPin size={18} className="mt-0.5 shrink-0 text-verde" />
+                  <address className="not-italic">
+                    <span className="font-semibold text-brancoFrio">{end.cidade}</span>
+                    <br />
+                    {end.logradouro}
+                  </address>
                 </li>
               ))}
             </ul>
-
-            <div className="mt-6 flex items-start gap-2 text-sm text-brancoFrio/75">
-              <MapPin size={18} className="mt-0.5 shrink-0 text-verde" />
-              <address className="not-italic">
-                {EMPRESA.endereco.cidade}
-                <br />
-                {EMPRESA.endereco.logradouro}
-              </address>
-            </div>
           </div>
         </div>
 
