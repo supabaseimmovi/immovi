@@ -26,9 +26,10 @@ function formatar(iso: string): string {
 export default async function LeadDetalhePage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const { lead, historico } = await getLeadComHistorico(params.id)
+  const { id } = await params
+  const { lead, historico } = await getLeadComHistorico(id)
   if (!lead) notFound()
 
   return (
