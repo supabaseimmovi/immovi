@@ -1,7 +1,10 @@
 export const EMPRESA = {
   nome: 'Immovi Contabilidade',
   slogan: 'Especialistas no Ecossistema Imobiliário',
-  dominio: process.env.NEXT_PUBLIC_SITE_URL || 'https://immovicontabilidade.com.br',
+  dominio: (() => {
+    const raw = process.env.NEXT_PUBLIC_SITE_URL || 'https://immovicontabilidade.com.br'
+    return raw.startsWith('http') ? raw : `https://${raw}`
+  })(),
   instagram:
     process.env.NEXT_PUBLIC_INSTAGRAM_URL ||
     'https://www.instagram.com/immovicontabilidade',
