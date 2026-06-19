@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Sparkles, ShieldCheck, TrendingDown } from 'lucide-react'
 import { HERO } from '@/lib/content'
 import EventLink from '@/components/ui/EventLink'
@@ -15,20 +16,16 @@ export default function Hero() {
       id="inicio"
       className="relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden bg-azulEscuro text-brancoFrio md:min-h-[calc(100svh-5rem)]"
     >
-      {/* Vídeo de fundo (desktop e mobile) */}
+      {/* Imagem de fundo */}
       <div aria-hidden="true" className="absolute inset-0">
-        <video
-          className="h-full w-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster="/media/hero/hero-poster.jpg"
-        >
-          <source src="/media/hero/hero.mp4" type="video/mp4" />
-        </video>
-        {/* Overlay para legibilidade do texto sobre o vídeo */}
+        <Image
+          src="/media/hero/hero-poster.jpg"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+          quality={85}
+        />
         <div className="absolute inset-0 bg-gradient-to-br from-azulEscuro/95 via-azulEscuro/85 to-azulEscuro/65" />
       </div>
 

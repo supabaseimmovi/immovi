@@ -29,7 +29,7 @@ export default async function LoginPage({
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center text-center">
           <Image
-            src="/media/logo/logo.png"
+            src="/media/logo/logo-v2.png"
             alt={`${EMPRESA.nome} — ${EMPRESA.slogan}`}
             width={2432}
             height={613}

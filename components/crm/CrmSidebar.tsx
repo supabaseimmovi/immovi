@@ -31,7 +31,7 @@ function SidebarConteudo({
       <div className="flex h-16 items-center border-b border-white/10 px-6">
         <Link href="/crm" onClick={onNavigate}>
           <Image
-            src="/media/logo/logo.png"
+            src="/media/logo/logo-v2.png"
             alt="Immovi Contabilidade"
             width={2432}
             height={613}
@@ -119,7 +119,7 @@ export default function CrmSidebar({
       <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-white/10 bg-azulEscuro px-4 md:hidden">
         <Link href="/crm">
           <Image
-            src="/media/logo/logo.png"
+            src="/media/logo/logo-v2.png"
             alt="Immovi Contabilidade"
             width={2432}
             height={613}

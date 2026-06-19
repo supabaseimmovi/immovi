@@ -84,7 +84,7 @@ export default function Header() {
           aria-label={`${EMPRESA.nome} — início`}
         >
           <Image
-            src="/media/logo/logo.png"
+            src="/media/logo/logo-v2.png"
             alt={`${EMPRESA.nome} — ${EMPRESA.slogan}`}
             width={2432}
             height={613}

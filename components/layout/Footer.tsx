@@ -17,7 +17,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Link href="/#inicio" className="inline-flex items-center">
               <Image
-                src="/media/logo/logo.png"
+                src="/media/logo/logo-v2.png"
                 alt={`${EMPRESA.nome} — ${EMPRESA.slogan}`}
                 width={2432}
                 height={613}

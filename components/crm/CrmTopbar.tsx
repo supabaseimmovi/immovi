@@ -35,7 +35,7 @@ export default function CrmTopbar({
         <div className="flex items-center gap-8">
           <Link href="/crm" className="flex items-center gap-2">
             <Image
-              src="/media/logo/logo.png"
+              src="/media/logo/logo-v2.png"
               alt="Immovi Contabilidade"
               width={2432}
               height={613}

@@ -1,16 +1,12 @@
 'use client'
 
-import { useState } from 'react'
 import { Check } from 'lucide-react'
 import { PLANOS, type Plano } from '@/lib/content'
 import { whatsappLink, MENSAGENS_WHATSAPP } from '@/lib/constants'
 import { analytics } from '@/lib/analytics'
 
-type Segmento = 'profissionais' | 'empresas'
-
 export default function Planos() {
-  const [segmento, setSegmento] = useState<Segmento>('profissionais')
-  const planos: Plano[] = PLANOS[segmento]
+  const planos: Plano[] = PLANOS.profissionais
 
   return (
     <section id="planos" className="bg-brancoFrio py-20 md:py-24">
@@ -22,36 +18,6 @@ export default function Planos() {
           <p className="mt-4 text-base text-cinzaMedio md:text-lg">
             {PLANOS.subtitulo}
           </p>
-        </div>
-
-        {/* Toggle */}
-        <div className="mt-10 flex justify-center">
-          <div className="inline-flex rounded-full border border-cinzaClaro bg-white p-1">
-            <button
-              type="button"
-              onClick={() => setSegmento('profissionais')}
-              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-colors ${
-                segmento === 'profissionais'
-                  ? 'bg-azulEscuro text-brancoFrio'
-                  : 'text-cinzaMedio hover:text-azulEscuro'
-              }`}
-              aria-pressed={segmento === 'profissionais'}
-            >
-              {PLANOS.toggle.profissionais}
-            </button>
-            <button
-              type="button"
-              onClick={() => setSegmento('empresas')}
-              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-colors ${
-                segmento === 'empresas'
-                  ? 'bg-azulEscuro text-brancoFrio'
-                  : 'text-cinzaMedio hover:text-azulEscuro'
-              }`}
-              aria-pressed={segmento === 'empresas'}
-            >
-              {PLANOS.toggle.empresas}
-            </button>
-          </div>
         </div>
 
         {/* Cards */}
@@ -113,7 +79,7 @@ export default function Planos() {
                   href={whatsappLink(MENSAGENS_WHATSAPP[plano.whatsappKey])}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => analytics.planoClick(plano.nivel, segmento)}
+                  onClick={() => analytics.planoClick(plano.nivel, 'profissionais')}
                   className={`block rounded-full px-6 py-3 text-center text-base font-semibold transition-transform hover:scale-[1.02] ${
                     plano.destaque
                       ? 'bg-verde text-azulEscuro'
